@@ -118,5 +118,18 @@
       "link": "https:hd0skshdep.com",
       "user": 2
     }
-  ]
+  ],
+  "sessiondatails": [
+    {
+      "id": 1,
+      "state": "Disponible",
+      "sessionId": 1
+    },
+    {
+      "id": 2,
+      "state": "Disponible",
+      "sessionId": 2
+    }
+    
+    ]
 }
