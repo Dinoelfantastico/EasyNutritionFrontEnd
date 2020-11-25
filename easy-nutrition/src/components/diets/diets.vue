@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      Users
+      Diets
       <v-spacer></v-spacer>
       <v-text-field
           v-model="search"
@@ -12,7 +12,7 @@
       ></v-text-field>
     </v-card-title>
     <v-card-text>
-      <v-data-table :headers="headers" :items="displayUsers" :items-per-page="5" :search="search"
+      <v-data-table :headers="headers" :items="displayDiets" :items-per-page="5" :search="search"
                     class="elevation-1" ref="usersTable">
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
@@ -34,37 +34,13 @@
                       <v-text-field v-model="editedItem.id" label="Id"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
+                      <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.password" label="Password"></v-text-field>
+                      <v-text-field v-model="editedItem.description" label="Description"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.lastname" label="Lastname"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.birthday" label="Birthday"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.phone" label="Phone"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.address" label="Address"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.active" label="Active"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.linkedin" label="Linkedin"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.role.id" label="Role"></v-text-field>
+                      <v-text-field v-model="editedItem.user" label="User"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -80,7 +56,7 @@
             <v-card>
               <v-card-title class="headline">Delete Item</v-card-title>
               <v-card-text>
-                <p>Are you sure you want to delete the item <b>{{ editedItem.username }}</b></p>
+                <p>Are you sure you want to delete the item <b>{{ editedItem.title }}</b></p>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -97,10 +73,10 @@
 </template>
 
 <script>
+import DietService from '../../services/diets-service';
 
-import UserService from '../../services/users-service';
 export default {
-  name: "users",
+  name: "diets",
   data() {
     return {
       search: '',
@@ -108,39 +84,27 @@ export default {
       dialogDelete: false,
       headers: [
         {text: 'Id', value: 'id'},
-        {text: 'Username', value: 'username'},
-        {text: 'Password', value: 'password'},
-        {text: 'Name', value: 'name'},
-        {text: 'Lastname', value: 'lastname'},
-        {text: 'Birthday', value: 'birthday'},
-        {text: 'Email', value: 'email'},
-        {text: 'Phone', value: 'phone'},
-        {text: 'Address', value: 'address'},
-        {text: 'Active', value: "active" },
-        {text: 'Linkedin', value: "linkedin" },
-        {text: 'Role', value: "role" },
+        {text: 'Title', value: 'title'},
+        {text: 'Description', value: 'description'},
+        {text: 'User', value: "user" },
         {text: 'Actions', value: 'actions', sortable: false}
       ],
-      users: [],
-      displayUsers: [],
+      diets: [],
+      displayDiets: [],
       editedIndex: -1,
       editedItem: {
         id: 0,
-        username: '',
-        role: ''
+        title: ''
       },
       defaultItem: {
         id: 0,
-        username: '',
-        role: ''
+        title: ''
       },
     }
   },
-
-
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New User' : 'Edit User'
+      return this.editedIndex === -1 ? 'New Diet' : 'Edit Diet'
     },
   },
 
@@ -153,42 +117,32 @@ export default {
     },
   },
   methods: {
-    retrieveUsers() {
-      UserService.getAll()
+    retrieveDiets() {
+      DietService.getAll()
           .then(response => {
-            this.users = response.data;
-            this.displayUsers = response.data.map(this.getDisplayUser);
+            this.diets = response.data;
+            this.displayDiets = response.data.map(this.getDisplayDiet);
           })
           .catch((e) => {
             console.log(e);
           });
     },
 
-
-    getDisplayUser(user) {
+    getDisplayDiet(diet) {
       return {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        password: user.password,
-        lastname: user.lastname,
-        birthday: user.birthday,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        active: user.active,
-        linkedin: user.linkedin,
-        role: user.role.name
+        id: diet.id,
+        title: diet.title,
+        description: diet.description,
+        user: diet.user
       };
     },
-
 
     refreshList() {
       this.retrieveUsers();
     },
 
-    removeAllUsers() {
-      UserService.deleteAll()
+    removeAllDiets() {
+      DietService.deleteAll()
           .then(() => {
             this.refreshList();
           })
@@ -199,21 +153,21 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.displayUsers.indexOf(item);
+      this.editedIndex = this.displayDiets.indexOf(item);
       console.log(item);
-      this.editedItem = this.users[this.editedIndex];
+      this.editedItem = this.diets[this.editedIndex];
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.displayUsers.indexOf(item);
-      this.editedItem = Object.assign({}, this.users[this.editedIndex]);
+      this.editedIndex = this.displayDiets.indexOf(item);
+      this.editedItem = Object.assign({}, this.diets[this.editedIndex]);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.deleteUser(this.editedItem.id);
-      this.users.splice(this.editedIndex, 1);
+      this.deleteDiet(this.editedItem.id);
+      this.diets.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -236,8 +190,8 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         this.users[this.editedIndex] = this.editedItem;
-        this.displayUsers[this.editedIndex] = this.getDisplayUser(this.users[this.editedIndex]);
-        UserService.update(this.editedItem.id, this.editedItem)
+        this.displayDiets[this.editedIndex] = this.getDisplayDiet(this.users[this.editedIndex]);
+        DietService.update(this.editedItem.id, this.editedItem)
             .then(() => {
               this.refreshList();
             })
@@ -246,11 +200,11 @@ export default {
             });
 
       } else {
-        UserService.create(this.editedItem)
+        DietService.create(this.editedItem)
             .then(response => {
               let item = response.data;
               this.users.push(item);
-              this.displayUsers.push(this.getDisplayUser(item));
+              this.displayUsers.push(this.getDisplayDiet(item));
             })
             .catch(e => {
               console.log(e);
@@ -259,8 +213,8 @@ export default {
       this.close()
     },
 
-    deleteUser(id) {
-      UserService.delete(id)
+    deleteDiet(id) {
+      DietService.delete(id)
           .then(() => {
             this.refreshList();
           })
@@ -269,15 +223,15 @@ export default {
           });
     },
 
-    navigateToAddUser() {
-      this.$router.push({name: 'add-user'});
+    navigateToAddDiet() {
+      this.$router.push({name: 'add-diet'});
     },
-    navigateToEditUser(id) {
-      this.$router.push({name: 'edit-user', params: { id: id}});
+    navigateToEditDiet(id) {
+      this.$router.push({name: 'edit-diet', params: { id: id}});
     }
   },
   mounted() {
-    this.retrieveUsers();
+    this.retrieveDiets();
   }
 
 }

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      Users
+      Complaints
       <v-spacer></v-spacer>
       <v-text-field
           v-model="search"
@@ -12,8 +12,8 @@
       ></v-text-field>
     </v-card-title>
     <v-card-text>
-      <v-data-table :headers="headers" :items="displayUsers" :items-per-page="5" :search="search"
-                    class="elevation-1" ref="usersTable">
+      <v-data-table :headers="headers" :items="displayComplaints" :items-per-page="5" :search="search"
+                    class="elevation-1" ref="ComplaintsTable">
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
           <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -34,38 +34,12 @@
                       <v-text-field v-model="editedItem.id" label="Id"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
+                      <v-text-field v-model="editedItem.name" label="Complaint Name"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.password" label="Password"></v-text-field>
+                      <v-text-field v-model="editedItem.description" label="Complaint Description"></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.lastname" label="Lastname"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.birthday" label="Birthday"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.phone" label="Phone"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.address" label="Address"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.active" label="Active"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.linkedin" label="Linkedin"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.role.id" label="Role"></v-text-field>
-                    </v-col>
+
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -80,7 +54,7 @@
             <v-card>
               <v-card-title class="headline">Delete Item</v-card-title>
               <v-card-text>
-                <p>Are you sure you want to delete the item <b>{{ editedItem.username }}</b></p>
+                <p>Are you sure you want to delete the item <b>{{ editedItem.name }}</b></p>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -98,49 +72,39 @@
 
 <script>
 
-import UserService from '../../services/users-service';
+import ComplaintService from '../../services/complaints-service'
+
 export default {
-  name: "users",
-  data() {
+
+  name: "complaints",
+  data (){
     return {
       search: '',
       dialog: false,
       dialogDelete: false,
       headers: [
         {text: 'Id', value: 'id'},
-        {text: 'Username', value: 'username'},
-        {text: 'Password', value: 'password'},
         {text: 'Name', value: 'name'},
-        {text: 'Lastname', value: 'lastname'},
-        {text: 'Birthday', value: 'birthday'},
-        {text: 'Email', value: 'email'},
-        {text: 'Phone', value: 'phone'},
-        {text: 'Address', value: 'address'},
-        {text: 'Active', value: "active" },
-        {text: 'Linkedin', value: "linkedin" },
-        {text: 'Role', value: "role" },
+        {text: 'Description', value: 'description'},
         {text: 'Actions', value: 'actions', sortable: false}
       ],
-      users: [],
-      displayUsers: [],
+      complaints: [],
+      displayComplaints: [],
       editedIndex: -1,
       editedItem: {
         id: 0,
-        username: '',
-        role: ''
+        name: ''
       },
       defaultItem: {
         id: 0,
-        username: '',
-        role: ''
+        name: ''
       },
     }
   },
 
-
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New User' : 'Edit User'
+      return this.editedIndex === -1 ? 'New Complaint' : 'Edit Complaint'
     },
   },
 
@@ -152,43 +116,34 @@ export default {
       val || this.closeDelete()
     },
   },
+
   methods: {
-    retrieveUsers() {
-      UserService.getAll()
+    retrieveComplaint() {
+      ComplaintService.getAll()
           .then(response => {
-            this.users = response.data;
-            this.displayUsers = response.data.map(this.getDisplayUser);
+            this.complaints = response.data;
+            this.displayComplaints = response.data.map(this.getDisplayComplaint);
           })
           .catch((e) => {
             console.log(e);
           });
     },
 
-
-    getDisplayUser(user) {
+    getDisplayComplaint(complaint) {
       return {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        password: user.password,
-        lastname: user.lastname,
-        birthday: user.birthday,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        active: user.active,
-        linkedin: user.linkedin,
-        role: user.role.name
+        id: complaint.id,
+        name: complaint.name,
+        description: complaint.description
       };
     },
 
-
     refreshList() {
-      this.retrieveUsers();
+      this.retrieveComplaint();
     },
 
-    removeAllUsers() {
-      UserService.deleteAll()
+
+    removeAllComplaints() {
+      ComplaintService.deleteAll()
           .then(() => {
             this.refreshList();
           })
@@ -199,21 +154,21 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.displayUsers.indexOf(item);
+      this.editedIndex = this.displayComplaints.indexOf(item);
       console.log(item);
-      this.editedItem = this.users[this.editedIndex];
+      this.editedItem = this.complaints[this.editedIndex];
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.displayUsers.indexOf(item);
-      this.editedItem = Object.assign({}, this.users[this.editedIndex]);
+      this.editedIndex = this.displayComplaints.indexOf(item);
+      this.editedItem = Object.assign({}, this.complaints[this.editedIndex]);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.deleteUser(this.editedItem.id);
-      this.users.splice(this.editedIndex, 1);
+      this.deleteComplaint(this.editedItem.id);
+      this.complaints.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -235,9 +190,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        this.users[this.editedIndex] = this.editedItem;
-        this.displayUsers[this.editedIndex] = this.getDisplayUser(this.users[this.editedIndex]);
-        UserService.update(this.editedItem.id, this.editedItem)
+        this.complaints[this.editedIndex] = this.editedItem;
+        this.displayComplaints[this.editedIndex] = this.getDisplayComplaint(this.complaints[this.editedIndex]);
+        ComplaintService.update(this.editedItem.id, this.editedItem)
             .then(() => {
               this.refreshList();
             })
@@ -246,11 +201,11 @@ export default {
             });
 
       } else {
-        UserService.create(this.editedItem)
+        ComplaintService.create(this.editedItem)
             .then(response => {
               let item = response.data;
-              this.users.push(item);
-              this.displayUsers.push(this.getDisplayUser(item));
+              this.complaints.push(item);
+              this.displayComplaints.push(this.getDisplayComplaint(item));
             })
             .catch(e => {
               console.log(e);
@@ -259,8 +214,9 @@ export default {
       this.close()
     },
 
-    deleteUser(id) {
-      UserService.delete(id)
+
+    deleteComplaint(id) {
+      ComplaintService.delete(id)
           .then(() => {
             this.refreshList();
           })
@@ -269,18 +225,21 @@ export default {
           });
     },
 
-    navigateToAddUser() {
-      this.$router.push({name: 'add-user'});
+    navigateToAddComplaint() {
+      this.$router.push({name: 'add-complaint'});
     },
-    navigateToEditUser(id) {
-      this.$router.push({name: 'edit-user', params: { id: id}});
+    navigateToEditComplaint(id) {
+      this.$router.push({name: 'edit-complaint', params: { id: id}});
     }
+
   },
+
   mounted() {
-    this.retrieveUsers();
+    this.retrieveComplaint();
   }
 
 }
+
 </script>
 
 <style scoped>

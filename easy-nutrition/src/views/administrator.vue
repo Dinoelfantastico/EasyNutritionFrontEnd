@@ -4,7 +4,6 @@
       <v-toolbar-title>Easy Nutrition</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn text to="/calendar">Appointments</v-btn>
         <v-btn text to="/roles">Roles</v-btn>
         <v-btn text to="/users">Users</v-btn>
         <v-btn text to="/subscriptions">Subscriptions</v-btn>
@@ -15,9 +14,6 @@
       </v-toolbar-items>
     </v-app-bar>
     <v-main>
-      <div>
-        <h1 align="center">Welcome to EasyNutrition</h1>
-      </div>
       <v-container>
         <router-view></router-view>
       </v-container>
@@ -27,18 +23,13 @@
   </v-app>
 </template>
 
+
 <script>
-
-
 export default {
-  name: 'App',
-
-  components: {
-
-  },
-
-  data: () => ({
-    //
-  }),
-};
+name: "administrator"
+}
 </script>
+
+<style scoped>
+
+</style>

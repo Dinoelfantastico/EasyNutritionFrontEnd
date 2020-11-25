@@ -56,5 +56,67 @@
       "linkedin": "",
       "role": "2"
     }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "maxSessions": 4,
+      "price": 10,
+      "active": true,
+      "userId": 1
+    },
+    {
+      "id": "3",
+      "maxSessions": "4",
+      "price": "12",
+      "active": "true",
+      "userId": "4"
+    },
+    {
+      "id": "kEWnQjw",
+      "subscriptionname": "",
+      "maxSessions": "sdasd",
+      "price": "awdawd",
+      "userId": "awdawd"
+    },
+    {
+      "id": "dasd",
+      "subscriptionname": "",
+      "maxSessions": "awdawd",
+      "price": "awdawd",
+      "active": "awdaw",
+      "userId": "dawdaw"
+    }
+  ],
+
+  "diets": [
+    {
+      "id": 1,
+      "title": "Dieta Vegetariana",
+      "description": "Example of a diet",
+      "user": 1
+    },
+    {
+      "id": 2,
+      "title": "Dieta para masa muscular",
+      "description": "Example of a diet",
+      "user": 2
+    }
+    ],
+  "sessions": [
+    {
+      "id": 1,
+      "startat": "Monday, March 24, 2019 17:00:00 PM",
+      "endat": "Monday, March 24, 2019 18:00:00 PM",
+      "link": "https:afjaowjfiawj.com",
+      "user": 1
+    },
+    {
+      "id": 2,
+      "startat": "Thursday, March 26, 2019 20:00:00 PM",
+      "endat": "Thursday, March 26, 2019 21:00:00 PM",
+      "link": "https:hd0skshdep.com",
+      "user": 2
+    }
   ]
 }

@@ -40,7 +40,7 @@
             <v-text-field v-model="item.linkedin" label="Linkedin"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="item.role" label="Role"></v-text-field>
+            <v-text-field v-model="item.roleId" label="RoleId"></v-text-field>
           </v-col>
         </v-row>
       </v-container>
@@ -62,7 +62,8 @@ export default {
     return {
       item: {
         id: 0,
-        username: ''
+        username: '',
+        roleId:''
       }
     }
   },

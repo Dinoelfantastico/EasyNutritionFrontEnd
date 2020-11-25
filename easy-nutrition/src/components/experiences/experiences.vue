@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      Users
+      Experiences
       <v-spacer></v-spacer>
       <v-text-field
           v-model="search"
@@ -12,8 +12,8 @@
       ></v-text-field>
     </v-card-title>
     <v-card-text>
-      <v-data-table :headers="headers" :items="displayUsers" :items-per-page="5" :search="search"
-                    class="elevation-1" ref="usersTable">
+      <v-data-table :headers="headers" :items="displayExperiences" :items-per-page="5" :search="search"
+                    class="elevation-1" ref="experiencesTable">
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
           <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -34,38 +34,12 @@
                       <v-text-field v-model="editedItem.id" label="Id"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.password" label="Password"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
                       <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.lastname" label="Lastname"></v-text-field>
+                      <v-text-field v-model="editedItem.description" label="Description"></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.birthday" label="Birthday"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.phone" label="Phone"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.address" label="Address"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.active" label="Active"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.linkedin" label="Linkedin"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.role.id" label="Role"></v-text-field>
-                    </v-col>
+
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -97,10 +71,10 @@
 </template>
 
 <script>
+import ExperienceService from '../../services/experiences-service';
 
-import UserService from '../../services/users-service';
 export default {
-  name: "users",
+  username: "experience",
   data() {
     return {
       search: '',
@@ -108,39 +82,26 @@ export default {
       dialogDelete: false,
       headers: [
         {text: 'Id', value: 'id'},
-        {text: 'Username', value: 'username'},
-        {text: 'Password', value: 'password'},
-        {text: 'Name', value: 'name'},
-        {text: 'Lastname', value: 'lastname'},
-        {text: 'Birthday', value: 'birthday'},
-        {text: 'Email', value: 'email'},
-        {text: 'Phone', value: 'phone'},
-        {text: 'Address', value: 'address'},
-        {text: 'Active', value: "active" },
-        {text: 'Linkedin', value: "linkedin" },
-        {text: 'Role', value: "role" },
+        {text: 'Name', value: 'rame'},
+        {text: 'Description', value: 'description'},
         {text: 'Actions', value: 'actions', sortable: false}
       ],
-      users: [],
-      displayUsers: [],
+      experiences: [],
+      displayExperiences: [],
       editedIndex: -1,
       editedItem: {
         id: 0,
-        username: '',
-        role: ''
+        name: ''
       },
       defaultItem: {
         id: 0,
-        username: '',
-        role: ''
+        name: ''
       },
     }
   },
-
-
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New User' : 'Edit User'
+      return this.editedIndex === -1 ? 'New Experience' : 'Edit Experience'
     },
   },
 
@@ -153,42 +114,31 @@ export default {
     },
   },
   methods: {
-    retrieveUsers() {
-      UserService.getAll()
+    retrieveExperiences() {
+      ExperienceService.getAll()
           .then(response => {
             this.users = response.data;
-            this.displayUsers = response.data.map(this.getDisplayUser);
+            this.displayExperiences = response.data.map(this.getDisplayExperience);
           })
           .catch((e) => {
             console.log(e);
           });
     },
 
-
-    getDisplayUser(user) {
+    getDisplayExperience(experience) {
       return {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        password: user.password,
-        lastname: user.lastname,
-        birthday: user.birthday,
-        email: user.email,
-        phone: user.phone,
-        address: user.address,
-        active: user.active,
-        linkedin: user.linkedin,
-        role: user.role.name
+        id: experience.id,
+        name: experience.name,
+        description: experience.description
       };
     },
 
-
     refreshList() {
-      this.retrieveUsers();
+      this.retrieveExperiences();
     },
 
-    removeAllUsers() {
-      UserService.deleteAll()
+    removeAllExperiences() {
+      ExperienceService.deleteAll()
           .then(() => {
             this.refreshList();
           })
@@ -199,21 +149,21 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.displayUsers.indexOf(item);
+      this.editedIndex = this.displayExperiences.indexOf(item);
       console.log(item);
-      this.editedItem = this.users[this.editedIndex];
+      this.editedItem = this.experiences[this.editedIndex];
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.displayUsers.indexOf(item);
-      this.editedItem = Object.assign({}, this.users[this.editedIndex]);
+      this.editedIndex = this.displayExperiences.indexOf(item);
+      this.editedItem = Object.assign({}, this.experiences[this.editedIndex]);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.deleteUser(this.editedItem.id);
-      this.users.splice(this.editedIndex, 1);
+      this.deleteExperience(this.editedItem.id);
+      this.experiences.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -235,9 +185,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        this.users[this.editedIndex] = this.editedItem;
-        this.displayUsers[this.editedIndex] = this.getDisplayUser(this.users[this.editedIndex]);
-        UserService.update(this.editedItem.id, this.editedItem)
+        this.experiences[this.editedIndex] = this.editedItem;
+        this.displayExperiences[this.editedIndex] = this.getDisplayExperience(this.experiences[this.editedIndex]);
+        ExperienceService.update(this.editedItem.id, this.editedItem)
             .then(() => {
               this.refreshList();
             })
@@ -246,11 +196,11 @@ export default {
             });
 
       } else {
-        UserService.create(this.editedItem)
+        ExperienceService.create(this.editedItem)
             .then(response => {
               let item = response.data;
               this.users.push(item);
-              this.displayUsers.push(this.getDisplayUser(item));
+              this.displayExperiences.push(this.getDisplayExperience(item));
             })
             .catch(e => {
               console.log(e);
@@ -259,8 +209,8 @@ export default {
       this.close()
     },
 
-    deleteUser(id) {
-      UserService.delete(id)
+    deleteExperience(id) {
+      ExperienceService.delete(id)
           .then(() => {
             this.refreshList();
           })
@@ -269,15 +219,15 @@ export default {
           });
     },
 
-    navigateToAddUser() {
-      this.$router.push({name: 'add-user'});
+    navigateToAddExperience() {
+      this.$router.push({name: 'add-experience'});
     },
-    navigateToEditUser(id) {
-      this.$router.push({name: 'edit-user', params: { id: id}});
+    navigateToEditExperience(id) {
+      this.$router.push({name: 'edit-experience', params: { id: id}});
     }
   },
   mounted() {
-    this.retrieveUsers();
+    this.retrieveExperiences();
   }
 
 }
