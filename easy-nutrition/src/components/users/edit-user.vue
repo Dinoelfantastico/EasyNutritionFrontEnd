@@ -94,6 +94,7 @@ export default {
     }
   },
   created() {
+
     this.retrieveUser(this.$route.params.id);
   }
 }

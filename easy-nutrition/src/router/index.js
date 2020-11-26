@@ -141,10 +141,25 @@ const routes = [
         path: '/experiences/:id',
         name: 'edit-experience',
         component: () => import('../components/experiences/edit-experience')
+    },
+
+    {
+        path: '/sessions',
+        name: 'session',
+        component: () => import('../components/session/sessions')
+    },
+    {
+        path: '/sessions/new',
+        name: 'add-session',
+        component: () => import('../components/session/add-session')
+    },
+    {
+        path: '/sessions/:id',
+        name: 'edit-session',
+        component: () => import('../components/session/edit-session')
     }
 
 ]
-
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
